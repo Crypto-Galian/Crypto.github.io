@@ -21,7 +21,6 @@ body { font-family: 'Poppins', sans-serif; }
 <!-- LANDING -->
 <div x-show="page==='landing'" class="min-h-screen flex flex-col">
 
-<!-- HERO -->
 <section class="flex-1 flex flex-col items-center justify-center text-center px-6">
   <h1 class="text-5xl md:text-6xl font-extrabold text-blue-600 mb-4">🚀 Crypto Galian</h1>
   <p class="text-gray-600 mb-6 max-w-xl text-lg">
@@ -40,7 +39,6 @@ body { font-family: 'Poppins', sans-serif; }
   </button>
 </section>
 
-<!-- FEATURES -->
 <section class="grid grid-cols-1 md:grid-cols-3 gap-4 px-6 pb-10 max-w-5xl mx-auto">
   <div class="glass p-5 rounded-xl text-center">
     <h3 class="font-bold text-lg mb-2">💱 Multi Crypto</h3>
@@ -63,8 +61,8 @@ body { font-family: 'Poppins', sans-serif; }
 <!-- DASHBOARD -->
 <div x-show="page==='dashboard'" class="flex min-h-screen">
 
-<!-- SIDEBAR -->
 <aside class="bg-white md:w-64 w-full md:min-h-screen fixed md:static bottom-0 left-0 right-0 z-50 border-t md:border-r shadow-sm">
+
 <div class="hidden md:block p-5 space-y-4">
 <h2 class="text-xl font-bold text-blue-600 mb-6">🚀 Crypto Galian</h2>
 <button @click="section='dashboard'" :class="tab('dashboard')">🏠 Dashboard</button>
@@ -73,18 +71,58 @@ body { font-family: 'Poppins', sans-serif; }
 <button @click="section='withdraw'" :class="tab('withdraw')">💸 Withdraw</button>
 <button @click="section='status'" :class="tab('status')">📄 Status</button>
 <button @click="section='profile'" :class="tab('profile')">👤 Profile</button>
-<button @click="logout()" class="text-red-500 mt-4">🚪 Logout</button>
 </div>
 
-<div class="flex md:hidden justify-around py-2 bg-white text-sm scale-[1.08] origin-bottom">
-<button @click="section='dashboard'">🏠</button>
-<button @click="section='sell'">💰</button>
-<button @click="section='withdraw'">💸</button>
-<button @click="section='profile'">👤</button>
+<div x-data="{ active: 'dashboard' }"
+     class="fixed bottom-0 left-1/2 -translate-x-1/2 w-[95%] md:hidden z-50">
+  
+  <div class="relative flex items-center justify-between py-3 
+              bg-white/90 backdrop-blur-md 
+              shadow-md rounded-t-2xl border">
+
+    <!-- Sliding Bubble (100% responsive) -->
+<div 
+  class="absolute top-2 bottom-2 w-[20%] bg-blue-100 rounded-xl transition-all duration-300"
+  :class="{
+    'left-[2.5%]': active==='dashboard',
+    'left-[27.5%]': active==='sell',
+    'left-[52.5%]': active==='withdraw',
+    'left-[77.5%]': active==='profile'
+  }">
 </div>
+    <!-- Buttons -->
+    <button 
+      @click="active='dashboard'; section='dashboard'" 
+      class="relative z-10 w-[25%] text-lg text-center">
+      🏠
+    </button>
+
+    <button 
+      @click="active='sell'; section='sell'" 
+      class="relative z-10 w-[25%] text-lg text-center">
+      💰
+    </button>
+
+    <button 
+      @click="active='withdraw'; section='withdraw'" 
+      class="relative z-10 w-[25%] text-lg text-center">
+      💸
+    </button>
+
+    <button 
+      @click="active='profile'; section='profile'" 
+      class="relative z-10 w-[25%] text-lg text-center">
+      👤
+    </button>
+
+  </div>
+
+</div>
+
+  
+
 </aside>
 
-<!-- MAIN -->
 <main class="flex-1 p-4 pb-24 md:pb-4">
 
 <div class="mb-4">
@@ -94,7 +132,6 @@ body { font-family: 'Poppins', sans-serif; }
 <!-- DASHBOARD -->
 <div x-show="section==='dashboard'" class="space-y-4">
 
-<!-- QUICK ACTION -->
 <div class="glass p-4 rounded-xl flex justify-between items-center">
   <div>
     <p class="text-sm text-gray-500">Welcome back 👋</p>
@@ -105,7 +142,6 @@ body { font-family: 'Poppins', sans-serif; }
   </button>
 </div>
 
-<!-- STATS -->
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
 <div class="glass card p-5 text-center">
 <p>USD Balance</p>
@@ -121,7 +157,6 @@ body { font-family: 'Poppins', sans-serif; }
 </div>
 </div>
 
-<!-- RECENT ACTIVITY -->
 <div class="glass p-4 rounded-xl">
   <h3 class="font-bold mb-2">Recent Activity</h3>
   <template x-if="txs.length === 0">
@@ -165,10 +200,9 @@ body { font-family: 'Poppins', sans-serif; }
 class="mx-auto mt-2">
 </div>
 
-<!-- QR SCANNER -->
-
 <input placeholder="TX Hash" class="w-full p-2 border rounded-lg">
 <button @click="submit()" class="bg-blue-600 text-white w-full py-2 rounded-lg">Submit</button>
+
 </div>
 
 <!-- TRANSACTIONS -->
@@ -189,7 +223,6 @@ class="mx-auto mt-2">
 <!-- WITHDRAW -->
 <div x-show="section==='withdraw'" class="space-y-3 max-w-md">
 
-<!-- CURRENCY SELECT -->
 <select x-model="withdrawType" class="w-full p-2 border rounded-lg">
   <option value="inr">INR</option>
   <option value="usd">USD</option>
@@ -219,13 +252,21 @@ class="mx-auto mt-2">
 </div>
 
 <!-- PROFILE -->
-<div x-show="section==='profile'" class="glass p-4 rounded-lg">
+<div x-show="section==='profile'" class="glass p-4 rounded-lg space-y-3">
 <h3 class="font-bold">Profile</h3>
 <p>Crypto Galian User</p>
+
+<button 
+  @click="logout()" 
+  class="px-4 py-2 rounded-full border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition w-full">
+  Logout
+</button>
+
 </div>
 
 </main>
 </div>
+
 
 <script>
 function app(){
@@ -246,10 +287,7 @@ function app(){
   trx:"TQ6zXEEuZrFcSHWdhJt5a1Hi4p9qoBibTd"
  },
 
- // QR Scanner result
  scannedAddress:'',
-
- 
 
  rates:{
   usdt:83,
@@ -271,17 +309,15 @@ approveTx(i){
   const tx = this.txs[i];
   if(!tx || tx.status==='approved') return;
 
-  // credit balances on approval
   this.usd += tx.amount;
   this.inr += tx.amount * this.rates[tx.coin.toLowerCase()];
-
   tx.status = 'approved';
   this.pending--;
 },
 
- withdraw(){
+withdraw(){
   const minUSD = 500;
-  const minINR = 500 * 83; // convert $500 to INR
+  const minINR = 500 * 83;
 
   if(this.withdrawType==='inr'){
     if(this.inr<=0) return alert('No balance to withdraw');
@@ -300,8 +336,7 @@ approveTx(i){
   }
 },
 
-
- scanQR(e){
+scanQR(e){
   const file = e.target.files[0];
   if(!file) return;
   const reader = new FileReader();
@@ -309,12 +344,9 @@ approveTx(i){
     alert('QR scan feature placeholder (connect real scanner API)');
   };
   reader.readAsDataURL(file);
- },
+},
 
- 
-
- // FETCH LIVE PRICES
- async fetchPrices(){
+async fetchPrices(){
   try{
     const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana,tron,tether&vs_currencies=inr');
     const data = await res.json();
@@ -327,14 +359,14 @@ approveTx(i){
   }catch(e){
     console.log('Price fetch error', e);
   }
- },
+},
 
- init(){
+init(){
   this.fetchPrices();
-  setInterval(()=>this.fetchPrices(), 10000); // update every 10 sec
- },
+  setInterval(()=>this.fetchPrices(), 10000);
+},
 
- logout(){ this.page='landing'; }
+logout(){ this.page='landing'; }
  }
 }
 </script>
